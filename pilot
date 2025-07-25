@@ -1,0 +1,99 @@
+Based on the uploaded files, here's a full **code setup scaffold** for the Trash Quest game project, ready to be initialized in your workspace:
+
+---
+
+### ✅ Folder Structure
+
+```
+trash_quest/
+├── main.py
+├── engine/
+│   ├── __init__.py
+│   ├── game_state.py
+│   ├── world.py
+│   ├── battle.py
+│   ├── pokemon.py
+│   ├── items.py
+│   └── scripts.py
+├── data/
+│   ├── world.yaml
+│   ├── pokemon.yaml
+│   ├── moves.yaml
+│   ├── items.yaml
+│   ├── player.yaml
+│   ├── scripts.yaml
+│   └── flags.yaml
+└── utils/
+    └── loader.py
+```
+
+---
+
+### 📦 `main.py`
+
+```python
+from engine.pokemon import Pokemon
+from engine.game_state import GameState
+
+def main():
+    starter = Pokemon("bulbasaur", level=5)
+    print(f"{starter.name} knows: {starter.moves}")
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+### 🧠 `engine/pokemon.py`
+
+```python
+from utils.loader import load_yaml
+
+class Pokemon:
+    def __init__(self, species_id, level=5):
+        all_data = load_yaml("data/pokemon.yaml")
+        species = all_data.get(species_id)
+        if not species:
+            raise ValueError(f"Unknown Pokémon: {species_id}")
+
+        self.name = species_id
+        self.level = level
+        self.types = species["types"]
+        self.stats = species["base_stats"]
+        self.moves = self.init_moves(species["learnset"]["level_up"])
+
+    def init_moves(self, learnset):
+        return [entry["move"] for entry in learnset if entry["level"] <= self.level]
+```
+
+---
+
+### 🧰 `utils/loader.py`
+
+```python
+import yaml
+from pathlib import Path
+
+def load_yaml(file_path):
+    with open(Path(file_path), "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
+```
+
+---
+
+### 🚀 Next Steps
+
+1. **Populate** the YAML files in `/data/` – at minimum `pokemon.yaml`, `moves.yaml`, `world.yaml`.
+2. **Create** logic in `game_state.py` for player status, inventory, and save/load state.
+3. **Script system** in `scripts.py` for NPC behavior via `scripts.yaml`.
+4. **Initialize with GitHub & Codespaces** for team dev (already underway).
+5. **Add battle simulation & world navigation.**
+
+Would you like me to:
+
+* Generate the placeholder YAML files?
+* Auto-create this structure in your GitHub repo?
+* Add a working battle example?
+
+Let me know how you'd like to proceed.
